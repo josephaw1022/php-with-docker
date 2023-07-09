@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  php-app:
+
+    image: serversideup/php:8.2-fpm-nginx
+
+    ports:
+      - '8500:80'
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      - .:/var/www/html
