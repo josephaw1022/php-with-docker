@@ -1,40 +1,34 @@
 <?php
 
-
-
-$page_uri = $_SERVER['REQUEST_URI'];
-
-class AppRouter
+class Router
 {
+    private static function load_common_components()
+    {
+        $common_components = [
+            "head" => "views/partials/head.php",
+        ];
 
-    public function __construct(
-        public string $page_title = "My Website",
-    ) {
+        foreach ($common_components as $component) {
+            require $component;
+        }
     }
 
-    public function get_page_title()
+    public static function load()
     {
-        return $this->page_title;
+
+        $currentRoutePath = $_SERVER['REQUEST_URI'];
+
+        $routes = require "routes.php";
+
+        self::load_common_components();
+
+        if (array_key_exists($currentRoutePath, $routes)) {
+            return require $routes[$currentRoutePath];
+        } else {
+            return require "pages/404.php";
+        }
     }
 }
 
 
-
-readonly class ExampleClass
-{
-
-    public function __construct()
-    {
-        echo "This is the constructor";
-    }
-
-    public function example_method(): void
-    {
-        echo "This is an example method";
-    }
-
-    public static function example_static_method(): void
-    {
-        echo "<h1> This is an h1 tag!  </h1>";
-    }
-}
+Router::load();
